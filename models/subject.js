@@ -8,7 +8,7 @@ class Subject extends Sequelize.Model {
                 allowNull: false,
                 unique: true,
             },
-            vote: {
+            voteNum: {
                 type: Sequelize.INTEGER.UNSIGNED,
                 allowNull: false,
                 defaultValue: 0,

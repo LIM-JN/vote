@@ -1,17 +1,40 @@
-const express =require('express')
-
+const express = require('express')
 const  Subject  = require('../models/subject')
 
 const router = express.Router()
 
-router.get('/',(req,res,next) => {
-    res.render('main')
+router.get('/',async (req,res,next) => {
+    try {
+        const subjects = await Subject.findAll();
+        res.render('main', { subjects });
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
+})
+
+router.get('/subject',async (req,res,next) => {
+    try {
+        const data = await Subject.findAll();
+        res.status(201).json(data)
+    } catch (err) {
+        console.error(err);
+        next(err);
+    }
 })
 
 router.post('/voting',async (req,res,next) => {
     try {
-    console.log(req.body.vote)
-    const data = await Subject.findAll();
+
+    const value = await Subject.findOne(
+        {where: {name: req.body.vote}}
+    )
+    const currentNum = value.voteNum
+
+    const data = await Subject.update(
+        {voteNum: currentNum + 1},
+        {where:{name: req.body.vote}})
+
     res.status(201).json(data)
     } catch(err) {
         console.error(err);

@@ -10,7 +10,7 @@ const { sequelize } = require('./models')
 const app = express()
 
 app.set('port', process.env.PORT || 3000)
-app.set('view engine', 'html')
+app.set('view engine', 'nj')
 
 dotenv.config()
 
