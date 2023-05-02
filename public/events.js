@@ -27,13 +27,14 @@ form.addEventListener('submit',async (e) => {
     const vote = e.target.vote.value
 
     try {
-        await axios.post('/voting', { vote }); 
-        const note = document.createElement('div');
-        note.innerHTML = `you vote to ${vote}`;
-        getSubject();
         const logDiv = document.querySelector('.log');
-        logDiv.innerHTML = '';
-        logDiv.appendChild(note);
+        if (document.cookie.includes('haveVoted=true')) {
+            logDiv.innerHTML = '<p>you have voted already!</p>';
+            return ''
+        }
+        await axios.post('/voting', { vote }); 
+        getSubject();
+        logDiv.innerHTML = `<p>you vote to ${vote}</p>`;
     } catch(err) {
         console.error(err);
     }
