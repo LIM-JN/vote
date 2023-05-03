@@ -8,11 +8,25 @@ async function getSubject() {
         targetDiv.innerHTML = '';
         const subjects = await axios.get('/subject')
 
+        let sum = 0;
+        for (arg of subjects.data) {
+            sum+=arg.voteNum;
+        }
+
         subjects.data.map((subject) => {
+
             const div = document.createElement('div');
             div.innerHTML = `
             <input type="radio" id=${subject.name} name="vote" value=${subject.name}>
-            <label for=${subject.name}>${subject.name} have ${subject.voteNum} vote</label>` 
+            <label for=${subject.name}>
+                <div class='upper'>
+                    <div>${ subject.name } have ${ subject.voteNum } vote</div>
+                    <div>${ (100 * subject.voteNum/sum).toPrecision(3) }%</div>
+                </div>
+                <div class="line">
+                    <div class="green-bar" style="--percentage:${100 * subject.voteNum/sum}%"></div>
+                </div>
+            </label>` 
             targetDiv.appendChild(div);
         })
     } catch(err) {
@@ -30,6 +44,10 @@ form.addEventListener('submit',async (e) => {
         const logDiv = document.querySelector('.log');
         if (document.cookie.includes('haveVoted=true')) {
             logDiv.innerHTML = '<p>you have voted already!</p>';
+            return ''
+        }
+        if (vote === '') {
+            logDiv.innerHTML = '<p>pls select value before submit!</p>';
             return ''
         }
         await axios.post('/voting', { vote }); 

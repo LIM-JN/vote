@@ -29,9 +29,6 @@ router.get('/subject',async (req,res,next) => {
 
 router.post('/voting',async (req,res,next) => {
     try {
-    if (req.cookies.haveVoted) {
-        return res.send('you voted already')
-    }
     res.cookie('haveVoted', true, { maxAge: 60000 });
     const value = await Subject.findOne(
         {where: {name: req.body.vote}}
